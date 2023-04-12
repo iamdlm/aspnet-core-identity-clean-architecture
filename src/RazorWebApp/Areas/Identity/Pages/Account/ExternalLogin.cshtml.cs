@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Infrastructure.Identity.Models;
 
-namespace WebApp.Areas.Identity.Pages.Account
+namespace RazorWebApp.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel

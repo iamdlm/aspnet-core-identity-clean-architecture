@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Infrastructure.Identity.Models;
 
-namespace WebApp.Areas.Identity.Pages.Account
+namespace RazorWebApp.Areas.Identity.Pages.Account
 {
     public class LoginWith2faModel : PageModel
     {

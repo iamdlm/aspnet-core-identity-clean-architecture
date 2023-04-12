@@ -1,7 +1,7 @@
 using Application;
 using Infrastructure;
 
-namespace Razor
+namespace RazorWebApp
 {
     public class Program
     {
@@ -22,6 +22,8 @@ namespace Razor
             builder.Services.AddApplicationMappingProfiles();
 
             builder.Services.AddRazorPages();
+
+            builder.Services.ConfigureAutoMapper();
 
             var app = builder.Build();
 

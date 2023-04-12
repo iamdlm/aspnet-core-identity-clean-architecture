@@ -1,5 +1,4 @@
-﻿using Application.Interfaces;
-using Infrastructure.Persistence;
+﻿using Infrastructure.Persistence;
 using Infrastructure.Identity.Models;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Identity;
+using Application.Interfaces.Persistence;
+using Application.Interfaces.Identity;
+using Infrastructure.Identity.Services;
 
 namespace Infrastructure
 {
@@ -36,6 +38,12 @@ namespace Infrastructure
         {
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+        }
+
+        public static void AddApplicationServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

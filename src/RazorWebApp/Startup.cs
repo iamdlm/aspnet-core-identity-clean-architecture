@@ -1,17 +1,17 @@
-﻿using Application.Interfaces.Persistence;
-using Application.Mapper;
+﻿using Application.Mapper;
 using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.Mapper;
 
-namespace Application
+namespace RazorWebApp
 {
     public static class Startup
     {
-        public static void AddApplicationMappingProfiles(this IServiceCollection services)
+        public static void ConfigureAutoMapper(this IServiceCollection services)
         {
             MapperConfiguration mappingConfig = new(mc =>
             {
                 mc.AddProfile(new ApplicationProfile());
+                mc.AddProfile(new InfrastructureProfile());
             });
 
             services.AddSingleton(mappingConfig.CreateMapper());

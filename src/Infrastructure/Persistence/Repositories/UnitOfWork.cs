@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.Persistence;
 
 namespace Infrastructure.Persistence.Repositories
 {

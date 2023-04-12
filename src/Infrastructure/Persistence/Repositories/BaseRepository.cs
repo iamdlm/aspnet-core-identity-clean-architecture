@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
