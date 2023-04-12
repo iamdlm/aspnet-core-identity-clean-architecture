@@ -1,11 +1,12 @@
 ﻿using Application.Interfaces;
-using Infrastructure.Data;
-using Infrastructure.Identity;
-using Infrastructure.Repositories;
+using Infrastructure.Persistence;
+using Infrastructure.Identity.Models;
+using Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.Identity;
 
 namespace Infrastructure
 {

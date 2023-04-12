@@ -1,15 +1,14 @@
 ﻿using Application.Interfaces;
-using Infrastructure.Data;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly AppIdentityDbContext _context;
-        
-        public UnitOfWork(AppIdentityDbContext context)
+        private readonly AppDbContext _context;
+
+        public UnitOfWork(AppDbContext context)
         {
-            _context = context;            
+            _context = context;
         }
 
         public async Task<bool> CompleteAsync() => await _context.SaveChangesAsync() > 0;

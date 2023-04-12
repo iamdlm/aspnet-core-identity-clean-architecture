@@ -1,18 +1,16 @@
 ﻿using Application.Interfaces;
-using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Persistence.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         protected readonly AppDbContext _appContext;
-        
+
         public BaseRepository(AppDbContext appContext)
         {
-            _appContext = appContext;            
+            _appContext = appContext;
         }
 
         public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
