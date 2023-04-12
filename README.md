@@ -11,13 +11,13 @@ Clean Architecture is promoted by Microsoft on their .NET application architectu
 ```
 dotnet tool update --global dotnet-ef
 ```
-3. Open a command prompt in the `RazorWebApp` folder and execute the following commands:
+3. Open a command prompt in the `src` folder and execute the following commands:
 ```
 dotnet ef database update --context AppDbContext --project Infrastructure --startup-project WebApp 
 dotnet ef database update --context AppIdentityDbContext --project Infrastructure --startup-project WebApp
 ```
 4. Run the application.
-Note: If you need to create migrations, you can execute these commands from the `RazorWebApp` folder:
+Note: If you need to create migrations, you can execute these commands from the `src` folder:
 ```
 dotnet restore
 dotnet tool restore
