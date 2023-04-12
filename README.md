@@ -7,7 +7,7 @@ Clean Architecture is promoted by Microsoft on their .NET application architectu
 
 ## Configuring the sample to use PostgreSQL
 1. Ensure your connection string in appsettings.json point to a local PostgreSQL instance.
-2. Ensure the tool EF was already installed. You can find some help here
+2. Ensure the tool EF was already installed. You can find some help [here](https://docs.microsoft.com/ef/core/miscellaneous/cli/dotnet).
 ```
 dotnet tool update --global dotnet-ef
 ```
