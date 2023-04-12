@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{F255EB58-F184-4D66-87CF-ADB84FE1ED70}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorWebApp", "src\WebApp\RazorWebApp.csproj", "{E147552A-BACB-4FBA-A5AF-C0CB80DFA518}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorWebApp", "src\RazorWebApp\RazorWebApp.csproj", "{E147552A-BACB-4FBA-A5AF-C0CB80DFA518}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
