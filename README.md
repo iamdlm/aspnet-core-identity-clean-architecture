@@ -5,15 +5,6 @@ This solution provides a starting point to build any type of client (Razor pages
 
 Clean Architecture is promoted by Microsoft on their .NET application architecture guide page. The e-book written by Steve "ardalis" Smith ([@ardalis](https://github.com/ardalis)) is very well written and explains in detail the benefits of using Clean Architecture. For more details, please see [Architect Modern Web Applications with ASP.NET Core and Azure](https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/).
 
-## To Do
-- [x] Sign Up
-- [x] Sign In/Sign Out
-- [ ] Update user
-- [ ] Confirm Email
-- [ ] Forgot Password
-- [ ] Reset Password
-- [ ] Remove jQuery dependency
-
 ## Configuring the sample to use PostgreSQL
 1. Ensure your connection string in appsettings.json point to a local PostgreSQL instance.
 2. Ensure the tool EF was already installed. You can find some help [here](https://docs.microsoft.com/ef/core/miscellaneous/cli/dotnet).
@@ -22,16 +13,16 @@ dotnet tool update --global dotnet-ef
 ```
 3. Open a command prompt in the `src` folder and execute the following commands:
 ```
-dotnet ef database update --context AppDbContext --project Infrastructure --startup-project WebApp 
-dotnet ef database update --context AppIdentityDbContext --project Infrastructure --startup-project WebApp
+dotnet ef database update --context AppDbContext --project Infrastructure.Persistence --startup-project Web.Razor --connection "YOUR_CONNECTION_STRING_HERE"
+dotnet ef database update --context AppIdentityDbContext --project Infrastructure.Identity --startup-project Web.Razor --connection "YOUR_CONNECTION_STRING_HERE"
 ```
 4. Run the application.
 Note: If you need to create migrations, you can execute these commands from the `src` folder:
 ```
 dotnet restore
 dotnet tool restore
-dotnet ef migrations add InitialModel --context AppDbContext --project Infrastructure --startup-project RazorWebApp --output-dir Persistence\Migrations
-dotnet ef migrations add InitialModel --context AppIdentityDbContext --project Infrastructure --startup-project RazorWebApp --output-dir Identity\Migrations
+dotnet ef migrations add InitialModel --context AppDbContext --project Infrastructure.Persistence --startup-project Web.Razor --output-dir Persistence\Migrations
+dotnet ef migrations add InitialModel --context AppIdentityDbContext --project Infrastructure.Identity --startup-project Web.Razor --output-dir Identity\Migrations
 ```
 
 ## Getting Started - Razor pages
