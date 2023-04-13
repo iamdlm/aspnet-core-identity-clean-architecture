@@ -1,5 +1,4 @@
-﻿using Core.Application.Interfaces.Persistence;
-using Core.Application.Mapper;
+﻿using Core.Application.Mapper;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
