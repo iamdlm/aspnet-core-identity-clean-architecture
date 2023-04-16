@@ -16,13 +16,13 @@ dotnet tool update --global dotnet-ef
 dotnet ef database update --context AppDbContext --project Infrastructure.Persistence --startup-project Web.Razor --connection "YOUR_CONNECTION_STRING_HERE"
 dotnet ef database update --context AppIdentityDbContext --project Infrastructure.Identity --startup-project Web.Razor --connection "YOUR_CONNECTION_STRING_HERE"
 ```
-4. Run the application.
+4. Run the application.  
 Note: If you need to create migrations, you can execute these commands from the `src` folder:
 ```
 dotnet restore
 dotnet tool restore
-dotnet ef migrations add InitialModel --context AppDbContext --project Infrastructure.Persistence --startup-project Web.Razor --output-dir Persistence\Migrations
-dotnet ef migrations add InitialModel --context AppIdentityDbContext --project Infrastructure.Identity --startup-project Web.Razor --output-dir Identity\Migrations
+dotnet ef migrations add InitialModel --context AppDbContext --project Infrastructure.Persistence --startup-project Web.Razor --output-dir Migrations
+dotnet ef migrations add InitialModel --context AppIdentityDbContext --project Infrastructure.Identity --startup-project Web.Razor --output-dir Migrations
 ```
 
 ## Getting Started - Razor pages

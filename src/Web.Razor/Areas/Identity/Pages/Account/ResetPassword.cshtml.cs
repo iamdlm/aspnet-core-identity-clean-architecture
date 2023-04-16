@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -66,14 +67,13 @@ namespace Web.Razor.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            var user = await _userService.FindByEmailAsync(Input.Email);
-            if (user == null)
+            var result = await _authService.ResetPasswordAsync(new ResetPasswordRequest()
             {
-                // Don't reveal that the user does not exist
-                return RedirectToPage("./ResetPasswordConfirmation");
-            }
+                UserEmail = Input.Email,
+                Token = Input.Code,
+                NewPassword = Input.Password
+            });
 
-            var result = await _authService.ResetPasswordAsync(user, Input.Code, Input.Password);
             if (result.Succeeded)
             {
                 return RedirectToPage("./ResetPasswordConfirmation");

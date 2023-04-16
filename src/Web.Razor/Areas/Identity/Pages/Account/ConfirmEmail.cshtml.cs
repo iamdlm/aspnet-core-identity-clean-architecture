@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -29,15 +30,16 @@ namespace Web.Razor.Areas.Identity.Pages.Account
                 return RedirectToPage("/Index");
             }
 
-            var user = await _userService.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{userId}'.");
-            }
-
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            var result = await _authService.ConfirmEmailAsync(user, code);
+            
+            var result = await _authService.ConfirmEmailAsync(new ConfirmEmailRequest()
+            {
+                UserId = userId,
+                Token = code
+            });
+
             StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            
             return Page();
         }
     }

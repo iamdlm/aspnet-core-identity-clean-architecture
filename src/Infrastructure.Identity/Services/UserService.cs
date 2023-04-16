@@ -48,7 +48,7 @@ namespace Infrastructure.Identity.Services
             return await _userManager.GetUserIdAsync(user);
         }
 
-        public async Task<AuthenticationResult> ChangeEmailAsync(ApplicationUserDto userDto, string email, string code)
+        public async Task<AuthenticationResponse> ChangeEmailAsync(ApplicationUserDto userDto, string email, string code)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
             IdentityResult result = await _userManager.ChangeEmailAsync(user, email, code);
@@ -61,7 +61,7 @@ namespace Infrastructure.Identity.Services
             return await _userManager.IsEmailConfirmedAsync(user);
         }
 
-        public async Task<AuthenticationResult> ChangePasswordAsync(ApplicationUserDto userDto, string oldPassword, string newPassword)
+        public async Task<AuthenticationResponse> ChangePasswordAsync(ApplicationUserDto userDto, string oldPassword, string newPassword)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
             IdentityResult result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
@@ -92,14 +92,14 @@ namespace Infrastructure.Identity.Services
             return await _userManager.GetPhoneNumberAsync(user);
         }
 
-        public async Task<AuthenticationResult> SetPhoneNumberAsync(ApplicationUserDto userDto, string phoneNumber)
+        public async Task<AuthenticationResponse> SetPhoneNumberAsync(ApplicationUserDto userDto, string phoneNumber)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
             IdentityResult result = await _userManager.SetPhoneNumberAsync(user, phoneNumber);
             return result.ToAuthenticationResult();
         }
 
-        public async Task<AuthenticationResult> AddPasswordAsync(ApplicationUserDto userDto, string newPassword)
+        public async Task<AuthenticationResponse> AddPasswordAsync(ApplicationUserDto userDto, string newPassword)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
             IdentityResult result = await _userManager.AddPasswordAsync(user, newPassword);
