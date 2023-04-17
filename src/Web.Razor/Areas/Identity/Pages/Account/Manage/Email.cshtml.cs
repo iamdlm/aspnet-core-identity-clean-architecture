@@ -119,7 +119,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
 
             var userId = await _userService.GetUserIdAsync(user);
             var email = await _userService.GetEmailAsync(user);
-            var code = await _authService.GenerateEmailConfirmationTokenAsync(user);
+            var code = await _authService.GenerateEmailConfirmationTokenAsync(userId);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",

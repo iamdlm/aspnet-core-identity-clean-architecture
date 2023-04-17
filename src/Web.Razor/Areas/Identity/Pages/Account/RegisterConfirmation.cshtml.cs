@@ -49,7 +49,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userService.GetUserIdAsync(user);
-                var code = await _authService.GenerateEmailConfirmationTokenAsync(user);
+                var code = await _authService.GenerateEmailConfirmationTokenAsync(userId);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",

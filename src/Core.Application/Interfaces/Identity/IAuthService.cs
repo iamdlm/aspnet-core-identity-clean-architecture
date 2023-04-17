@@ -12,7 +12,7 @@ namespace Core.Application.Interfaces.Identity
         Task<AuthenticationResponse> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest);
         Task<string> GeneratePasswordResetTokenAsync(ApplicationUserDto user);
         Task<ApplicationUserDto> GetCurrentUserAsync(ClaimsPrincipal user);
-        Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUserDto user);
+        Task<string> GenerateEmailConfirmationTokenAsync(string userId);
         Task<string> GenerateChangeEmailTokenAsync(ApplicationUserDto user, string newEmail);
         Task<AuthenticationResponse> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest);
         Task RefreshSignInAsync(ApplicationUserDto user);        

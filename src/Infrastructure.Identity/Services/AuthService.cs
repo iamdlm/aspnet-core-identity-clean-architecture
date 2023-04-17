@@ -103,9 +103,9 @@ namespace Infrastructure.Identity.Services
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
-        public async Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUserDto userDto)
+        public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.FindByIdAsync(userId);
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
 
