@@ -56,7 +56,11 @@ namespace Web.Razor.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                AuthenticationResult result = await _authService.SignUpAsync(Input.Email, Input.Password);
+                AuthenticationResponse result = await _authService.SignUpAsync(new SignUpRequest()
+                {
+                    Email = Input.Email,
+                    Password = Input.Password
+                });
 
                 if (result.Succeeded)
                 {

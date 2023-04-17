@@ -5,9 +5,9 @@ namespace Infrastructure.Identity.Helpers
 {
     public static class IdentityResultExtensions
     {
-        public static AuthenticationResult ToAuthenticationResult(this IdentityResult result)
+        public static AuthenticationResponse ToAuthenticationResult(this IdentityResult result)
         {
-            return new AuthenticationResult()
+            return new AuthenticationResponse()
             {
                 Succeeded = result.Succeeded,
                 Errors = result.Errors.ToDictionary(e => e.Code, e => e.Description)
