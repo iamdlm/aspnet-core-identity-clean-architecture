@@ -1,10 +1,5 @@
-﻿@using Infrastructure.Identity.Models;
-@using Microsoft.AspNetCore.Identity;
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
-
-<ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+﻿<ul class="navbar-nav">
+    @if (User.Identity.IsAuthenticated)
     {
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
