@@ -10,13 +10,11 @@ namespace Web.Razor.Areas.Identity.Pages.Account
 {
     public class ResetPasswordModel : PageModel
     {
-        private readonly IUserService _userService;
         private readonly IAuthService _authService;
 
         public ResetPasswordModel(
-            IUserService userService, IAuthService authService)
+            IAuthService authService)
         {
-            _userService = userService;
             _authService = authService;
         }
 

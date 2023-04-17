@@ -9,14 +9,11 @@ namespace Web.Razor.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {
-        private readonly IUserService _userService;
         private readonly IAuthService _authService;
 
         public ConfirmEmailModel(
-            IUserService userService,
             IAuthService authService)
         {
-            _userService = userService;
             _authService = authService;
         }
 
