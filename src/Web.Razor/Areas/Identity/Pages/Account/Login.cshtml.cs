@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -56,7 +57,12 @@ namespace Web.Razor.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var succeeded = await _authService.SignInAsync(Input.Email, Input.Password, Input.RememberMe);
+                var succeeded = await _authService.SignInAsync(new SignInRequest()
+                {
+                    Email = Input.Email,
+                    Password = Input.Password,
+                    RememberMe = Input.RememberMe
+                });
                 
                 if (succeeded)
                 {

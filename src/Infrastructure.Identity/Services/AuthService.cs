@@ -21,9 +21,9 @@ namespace Infrastructure.Identity.Services
             _signInManager = signInManager;
         }
 
-        public async Task<bool> SignInAsync(string email, string password, bool rememberMe)
+        public async Task<bool> SignInAsync(SignInRequest request)
         {
-            SignInResult signInResult = await _signInManager.PasswordSignInAsync(email, password, rememberMe, false);
+            SignInResult signInResult = await _signInManager.PasswordSignInAsync(request.Email, request.Password, request.RememberMe, false);
             return signInResult.Succeeded;
         }
 
@@ -55,15 +55,15 @@ namespace Infrastructure.Identity.Services
             return _mapper.Map<ApplicationUserDto>(user);
         }
 
-        public async Task<AuthenticationResult> SignUpAsync(string email, string password)
+        public async Task<AuthenticationResponse> SignUpAsync(SignUpRequest request)
         {
             var user = new ApplicationUser
             {
-                Email = email,
-                UserName = email
+                Email = request.Email,
+                UserName = request.Email
             };
 
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, request.Password);
 
             if (result.Succeeded)
             {
@@ -73,18 +73,28 @@ namespace Infrastructure.Identity.Services
             return result.ToAuthenticationResult();
         }
 
-        public async Task<AuthenticationResult> ChangePasswordAsync(ApplicationUserDto userDto, string currentPassword, string newPassword)
+        public async Task<AuthenticationResponse> ChangePasswordAsync(ApplicationUserDto userDto, string currentPassword, string newPassword)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
             var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
             return result.ToAuthenticationResult();
         }
 
-        public async Task<AuthenticationResult> ResetPasswordAsync(ApplicationUserDto userDto, string token, string newPassword)
+        public async Task<AuthenticationResponse> ResetPasswordAsync(ResetPasswordRequest request)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
-            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
-            return result.ToAuthenticationResult();
+            ApplicationUser user = await _userManager.FindByEmailAsync(request.UserEmail);
+            
+            if (user != null)
+            {
+                var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+                return result.ToAuthenticationResult();
+            }
+
+            return new AuthenticationResponse()
+            {
+                Succeeded = false,
+                Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
+            };
         }
 
         public async Task<string> GeneratePasswordResetTokenAsync(ApplicationUserDto userDto)
@@ -99,11 +109,21 @@ namespace Infrastructure.Identity.Services
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
 
-        public async Task<AuthenticationResult> ConfirmEmailAsync(ApplicationUserDto userDto, string code)
+        public async Task<AuthenticationResponse> ConfirmEmailAsync(ConfirmEmailRequest request)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
-            IdentityResult result = await _userManager.ConfirmEmailAsync(user, code);
-            return result.ToAuthenticationResult();
+            ApplicationUser user = await _userManager.FindByIdAsync(request.UserId);
+            
+            if (user != null)
+            {
+                IdentityResult result = await _userManager.ConfirmEmailAsync(user, request.Token);
+                return result.ToAuthenticationResult();
+            }
+
+            return new AuthenticationResponse()
+            {
+                Succeeded = false,
+                Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
+            };
         }
 
         public async Task RefreshSignInAsync(ApplicationUserDto userDto)
