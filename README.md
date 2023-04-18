@@ -16,8 +16,7 @@ dotnet tool update --global dotnet-ef
 dotnet ef database update --context AppDbContext --project Infrastructure.Persistence --startup-project Web.Razor --connection "YOUR_CONNECTION_STRING_HERE"
 dotnet ef database update --context AppIdentityDbContext --project Infrastructure.Identity --startup-project Web.Razor --connection "YOUR_CONNECTION_STRING_HERE"
 ```
-4. Run the application.
-<br>
+4. Run the application.  
 Note: If you need to create migrations, you can execute these commands from the `src` folder:
 ```
 dotnet restore
