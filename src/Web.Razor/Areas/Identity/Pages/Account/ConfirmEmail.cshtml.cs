@@ -1,9 +1,7 @@
-﻿using System.Text;
-using Core.Application.DTOs;
+﻿using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Web.Razor.Areas.Identity.Pages.Account
 {
