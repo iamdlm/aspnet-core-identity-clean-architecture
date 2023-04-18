@@ -28,8 +28,6 @@ namespace Web.Razor.Areas.Identity.Pages.Account
                 return RedirectToPage("/Index");
             }
 
-            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            
             var result = await _userService.ChangeEmailAsync(User, email, code);
             
             if (!result.Succeeded)

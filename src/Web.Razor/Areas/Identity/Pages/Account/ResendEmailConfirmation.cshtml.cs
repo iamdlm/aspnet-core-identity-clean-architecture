@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text;
+using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Web.Razor.Areas.Identity.Pages.Account
 {
@@ -45,20 +44,19 @@ namespace Web.Razor.Areas.Identity.Pages.Account
             }
 
             var user = await _userService.FindByEmailAsync(Input.Email);
+            
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
                 return Page();
             }
 
-            var code = await _authService.GenerateEmailConfirmationTokenAsync(User);
-            
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            EmailConfirmationResponse response = await _authService.GenerateEmailConfirmationAsync(User);
             
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { code },
+                values: new { response.Token },
                 protocol: Request.Scheme);
             
             //await _emailSender.SendEmailAsync(
@@ -67,6 +65,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account
             //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
             ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+
             return Page();
         }
     }

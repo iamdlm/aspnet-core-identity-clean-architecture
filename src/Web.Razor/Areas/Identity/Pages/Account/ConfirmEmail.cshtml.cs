@@ -27,9 +27,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account
                 return RedirectToPage("/Index");
             }
 
-            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            
-            var result = await _authService.ConfirmEmailAsync(new ConfirmEmailRequest()
+            var result = await _authService.ConfirmEmailAsync(new EmailConfirmationRequest()
             {
                 UserId = userId,
                 Token = code

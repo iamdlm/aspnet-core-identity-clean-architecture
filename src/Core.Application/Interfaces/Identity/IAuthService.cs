@@ -12,9 +12,9 @@ namespace Core.Application.Interfaces.Identity
         Task<AuthenticationResponse> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest);
         Task<string> GeneratePasswordResetTokenAsync(ClaimsPrincipal user);
         Task<ApplicationUserDto> GetCurrentUserAsync(ClaimsPrincipal user);
-        Task<string> GenerateEmailConfirmationTokenAsync(ClaimsPrincipal user);
+        Task<EmailConfirmationResponse> GenerateEmailConfirmationAsync(ClaimsPrincipal user);
         Task<string> GenerateChangeEmailTokenAsync(ClaimsPrincipal user, string newEmail);
-        Task<AuthenticationResponse> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest);
+        Task<AuthenticationResponse> ConfirmEmailAsync(EmailConfirmationRequest emailConfirmationRequest);
         Task RefreshSignInAsync(ClaimsPrincipal user);        
     }
 }

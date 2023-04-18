@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,14 +49,12 @@ namespace Web.Razor.Areas.Identity.Pages.Account
             DisplayConfirmAccountLink = true;
             if (DisplayConfirmAccountLink)
             {
-                var userId = await _userService.GetUserIdAsync(User);
-                var code = await _authService.GenerateEmailConfirmationTokenAsync(User);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                EmailConfirmationResponse confirmationDto = await _authService.GenerateEmailConfirmationAsync(User);
                 
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
-                    values: new { area = "Identity", userId, code, returnUrl },
+                    values: new { area = "Identity", confirmationDto.UserId, code = confirmationDto.Token, returnUrl },
                     protocol: Request.Scheme);
             }
 

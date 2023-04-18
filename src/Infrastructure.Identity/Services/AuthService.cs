@@ -5,6 +5,8 @@ using AutoMapper;
 using Core.Application.Interfaces.Identity;
 using Infrastructure.Identity.Models;
 using Infrastructure.Identity.Helpers;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace Infrastructure.Identity.Services
 {
@@ -83,7 +85,7 @@ namespace Infrastructure.Identity.Services
         public async Task<AuthenticationResponse> ResetPasswordAsync(ResetPasswordRequest request)
         {
             ApplicationUser user = await _userManager.FindByEmailAsync(request.UserEmail);
-            
+
             if (user != null)
             {
                 var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
@@ -103,19 +105,37 @@ namespace Infrastructure.Identity.Services
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
-        public async Task<string> GenerateEmailConfirmationTokenAsync(ClaimsPrincipal principal)
+        public async Task<EmailConfirmationResponse> GenerateEmailConfirmationAsync(ClaimsPrincipal principal)
         {
             ApplicationUser user = await _userManager.GetUserAsync(principal);
-            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            if (user == null)
+            {
+                return new EmailConfirmationResponse()
+                {
+                    Succeeded = false,
+                    Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
+                };
+            }
+
+            string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            return new EmailConfirmationResponse()
+            {
+                Succeeded = true,
+                UserId = user.Id,
+                Token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code))
+            };
         }
 
-        public async Task<AuthenticationResponse> ConfirmEmailAsync(ConfirmEmailRequest request)
+        public async Task<AuthenticationResponse> ConfirmEmailAsync(EmailConfirmationRequest request)
         {
             ApplicationUser user = await _userManager.FindByIdAsync(request.UserId);
-            
+
             if (user != null)
             {
-                IdentityResult result = await _userManager.ConfirmEmailAsync(user, request.Token);
+                string token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Token));
+                IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
                 return result.ToAuthenticationResult();
             }
 
@@ -129,7 +149,11 @@ namespace Infrastructure.Identity.Services
         public async Task RefreshSignInAsync(ClaimsPrincipal principal)
         {
             ApplicationUser user = await _userManager.GetUserAsync(principal);
-            await _signInManager.RefreshSignInAsync(user);
+
+            if (user != null)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+            }
         }
 
         public async Task<string> GenerateChangeEmailTokenAsync(ClaimsPrincipal principal, string newEmail)

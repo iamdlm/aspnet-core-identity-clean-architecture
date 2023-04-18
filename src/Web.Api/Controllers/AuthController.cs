@@ -1,6 +1,9 @@
 using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
+using Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace Web.Api.Controllers
 {
@@ -10,13 +13,16 @@ namespace Web.Api.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
         public AuthController(
             ILogger<AuthController> logger,
-            IAuthService authService)
+            IAuthService authService,
+            IUserService userService)
         {
             _logger = logger;
             _authService = authService;
+            _userService = userService;
         }
 
         [HttpPost("signin")]
@@ -93,8 +99,32 @@ namespace Web.Api.Controllers
             }
         }
 
+        [HttpGet("confirm")]
+        public async Task<ActionResult> RegisterConfirmationAsync()
+        {
+            try
+            {
+                EmailConfirmationResponse response = await _authService.GenerateEmailConfirmationAsync(User);
+
+                if (response == null || !response.Succeeded)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(new
+                {
+                    response.UserId,
+                    response.Token
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("confirm")]
-        public async Task<ActionResult> ConfirmEmailAsync(ConfirmEmailRequest request)
+        public async Task<ActionResult> ConfirmEmailAsync(EmailConfirmationRequest request)
         {
             try
             {

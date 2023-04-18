@@ -113,13 +113,12 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
             
-            var code = await _authService.GenerateEmailConfirmationTokenAsync(User);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            EmailConfirmationResponse confirmationResponse = await _authService.GenerateEmailConfirmationAsync(User);
             
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { area = "Identity", code },
+                values: new { area = "Identity", confirmationResponse.Token },
                 protocol: Request.Scheme);
             
             //await _emailSender.SendEmailAsync(
