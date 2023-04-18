@@ -4,6 +4,7 @@ using AutoMapper;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.Identity.Helpers;
+using System.Security.Claims;
 
 namespace Infrastructure.Identity.Services
 {
@@ -42,66 +43,66 @@ namespace Infrastructure.Identity.Services
             return _mapper.Map<ApplicationUserDto>(user);
         }
 
-        public async Task<string> GetUserIdAsync(ApplicationUserDto userDto)
+        public async Task<string> GetUserIdAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             return await _userManager.GetUserIdAsync(user);
         }
 
-        public async Task<AuthenticationResponse> ChangeEmailAsync(ApplicationUserDto userDto, string email, string code)
+        public async Task<AuthenticationResponse> ChangeEmailAsync(ClaimsPrincipal principal, string email, string code)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             IdentityResult result = await _userManager.ChangeEmailAsync(user, email, code);
             return result.ToAuthenticationResult();
         }
 
-        public async Task<bool> IsEmailConfirmedAsync(ApplicationUserDto userDto)
+        public async Task<bool> IsEmailConfirmedAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             return await _userManager.IsEmailConfirmedAsync(user);
         }
 
-        public async Task<AuthenticationResponse> ChangePasswordAsync(ApplicationUserDto userDto, string oldPassword, string newPassword)
+        public async Task<AuthenticationResponse> ChangePasswordAsync(ClaimsPrincipal principal, string oldPassword, string newPassword)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             IdentityResult result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
             return result.ToAuthenticationResult();
         }
 
-        public async Task<bool> HasPasswordAsync(ApplicationUserDto userDto)
+        public async Task<bool> HasPasswordAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             return await _userManager.HasPasswordAsync(user);
         }
 
-        public async Task<string> GetEmailAsync(ApplicationUserDto userDto)
+        public async Task<string> GetEmailAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             return await _userManager.GetEmailAsync(user);
         }
 
-        public async Task<string> GetUserNameAsync(ApplicationUserDto userDto)
+        public async Task<string> GetUserNameAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             return await _userManager.GetUserNameAsync(user);
         }
 
-        public async Task<string> GetPhoneNumberAsync(ApplicationUserDto userDto)
+        public async Task<string> GetPhoneNumberAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             return await _userManager.GetPhoneNumberAsync(user);
         }
 
-        public async Task<AuthenticationResponse> SetPhoneNumberAsync(ApplicationUserDto userDto, string phoneNumber)
+        public async Task<AuthenticationResponse> SetPhoneNumberAsync(ClaimsPrincipal principal, string phoneNumber)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             IdentityResult result = await _userManager.SetPhoneNumberAsync(user, phoneNumber);
             return result.ToAuthenticationResult();
         }
 
-        public async Task<AuthenticationResponse> AddPasswordAsync(ApplicationUserDto userDto, string newPassword)
+        public async Task<AuthenticationResponse> AddPasswordAsync(ClaimsPrincipal principal, string newPassword)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             IdentityResult result = await _userManager.AddPasswordAsync(user, newPassword);
             return result.ToAuthenticationResult();
         }

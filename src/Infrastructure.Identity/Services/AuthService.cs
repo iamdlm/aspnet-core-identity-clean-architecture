@@ -73,9 +73,9 @@ namespace Infrastructure.Identity.Services
             return result.ToAuthenticationResult();
         }
 
-        public async Task<AuthenticationResponse> ChangePasswordAsync(ApplicationUserDto userDto, string currentPassword, string newPassword)
+        public async Task<AuthenticationResponse> ChangePasswordAsync(ClaimsPrincipal principal, string currentPassword, string newPassword)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
             return result.ToAuthenticationResult();
         }
@@ -97,15 +97,15 @@ namespace Infrastructure.Identity.Services
             };
         }
 
-        public async Task<string> GeneratePasswordResetTokenAsync(ApplicationUserDto userDto)
+        public async Task<string> GeneratePasswordResetTokenAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
-        public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
+        public async Task<string> GenerateEmailConfirmationTokenAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = await _userManager.FindByIdAsync(userId);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
 
@@ -126,15 +126,15 @@ namespace Infrastructure.Identity.Services
             };
         }
 
-        public async Task RefreshSignInAsync(ApplicationUserDto userDto)
+        public async Task RefreshSignInAsync(ClaimsPrincipal principal)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
             await _signInManager.RefreshSignInAsync(user);
         }
 
-        public async Task<string> GenerateChangeEmailTokenAsync(ApplicationUserDto userDto, string newEmail)
+        public async Task<string> GenerateChangeEmailTokenAsync(ClaimsPrincipal principal, string newEmail)
         {
-            ApplicationUser user = _mapper.Map<ApplicationUser>(userDto);
+            ApplicationUser user = await _userManager.GetUserAsync(principal);
 
             return await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
         }

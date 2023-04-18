@@ -21,28 +21,24 @@ namespace Web.Razor.Areas.Identity.Pages.Account
         [TempData]
         public string StatusMessage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string userId, string email, string code)
+        public async Task<IActionResult> OnGetAsync(string email, string code)
         {
-            if (userId == null || email == null || code == null)
+            if (email == null || code == null)
             {
                 return RedirectToPage("/Index");
             }
 
-            var user = await _userService.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{userId}'.");
-            }
-
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            var result = await _userService.ChangeEmailAsync(user, email, code);
+            
+            var result = await _userService.ChangeEmailAsync(User, email, code);
+            
             if (!result.Succeeded)
             {
                 StatusMessage = "Error changing email.";
                 return Page();
             }
 
-            await _authService.RefreshSignInAsync(user);
+            await _authService.RefreshSignInAsync(User);
             StatusMessage = "Thank you for confirming your email change.";
             return Page();
         }

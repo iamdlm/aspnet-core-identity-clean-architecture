@@ -8,13 +8,13 @@ namespace Core.Application.Interfaces.Identity
         Task<bool> SignInAsync(SignInRequest signInRequest);
         Task SignOutAsync();
         Task<AuthenticationResponse> SignUpAsync(SignUpRequest signUpRequest);
-        Task<AuthenticationResponse> ChangePasswordAsync(ApplicationUserDto user, string currentPassword, string newPassword);
+        Task<AuthenticationResponse> ChangePasswordAsync(ClaimsPrincipal user, string currentPassword, string newPassword);
         Task<AuthenticationResponse> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest);
-        Task<string> GeneratePasswordResetTokenAsync(ApplicationUserDto user);
+        Task<string> GeneratePasswordResetTokenAsync(ClaimsPrincipal user);
         Task<ApplicationUserDto> GetCurrentUserAsync(ClaimsPrincipal user);
-        Task<string> GenerateEmailConfirmationTokenAsync(string userId);
-        Task<string> GenerateChangeEmailTokenAsync(ApplicationUserDto user, string newEmail);
+        Task<string> GenerateEmailConfirmationTokenAsync(ClaimsPrincipal user);
+        Task<string> GenerateChangeEmailTokenAsync(ClaimsPrincipal user, string newEmail);
         Task<AuthenticationResponse> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest);
-        Task RefreshSignInAsync(ApplicationUserDto user);        
+        Task RefreshSignInAsync(ClaimsPrincipal user);        
     }
 }

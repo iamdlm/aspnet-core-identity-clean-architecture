@@ -33,49 +33,45 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
         }
 
-        private async Task LoadAsync(ApplicationUserDto user)
+        private async Task LoadAsync()
         {
-            var userName = await _userService.GetUserNameAsync(user);
-            var phoneNumber = await _userService.GetPhoneNumberAsync(user);
-
-            Username = userName;
+            ApplicationUserDto userDto = await _authService.GetCurrentUserAsync(User);
+            
+            Username = userDto.UserName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = userDto.PhoneNumber
             };
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _authService.GetCurrentUserAsync(User);
+            
             if (user == null)
             {
                 return NotFound($"Unable to load user.");
             }
 
-            await LoadAsync(user);
+            await LoadAsync();
+            
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _authService.GetCurrentUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user.");
-            }
-
             if (!ModelState.IsValid)
             {
-                await LoadAsync(user);
+                await LoadAsync();
                 return Page();
             }
 
-            var phoneNumber = await _userService.GetPhoneNumberAsync(user);
+            var phoneNumber = await _userService.GetPhoneNumberAsync(User);
+            
             if (Input.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await _userService.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                var setPhoneResult = await _userService.SetPhoneNumberAsync(User, Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
                     StatusMessage = "Unexpected error when trying to set phone number.";
@@ -83,7 +79,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            await _authService.RefreshSignInAsync(user);
+            await _authService.RefreshSignInAsync(User);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
         }

@@ -48,13 +48,14 @@ namespace Web.Razor.Areas.Identity.Pages.Account
             DisplayConfirmAccountLink = true;
             if (DisplayConfirmAccountLink)
             {
-                var userId = await _userService.GetUserIdAsync(user);
-                var code = await _authService.GenerateEmailConfirmationTokenAsync(userId);
+                var userId = await _userService.GetUserIdAsync(User);
+                var code = await _authService.GenerateEmailConfirmationTokenAsync(User);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
-                    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                    values: new { area = "Identity", userId, code, returnUrl },
                     protocol: Request.Scheme);
             }
 

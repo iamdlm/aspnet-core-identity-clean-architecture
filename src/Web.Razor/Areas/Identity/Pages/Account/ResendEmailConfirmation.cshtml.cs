@@ -51,14 +51,16 @@ namespace Web.Razor.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            var userId = await _userService.GetUserIdAsync(user);
-            var code = await _authService.GenerateEmailConfirmationTokenAsync(userId);
+            var code = await _authService.GenerateEmailConfirmationTokenAsync(User);
+            
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { userId = userId, code = code },
+                values: new { code },
                 protocol: Request.Scheme);
+            
             //await _emailSender.SendEmailAsync(
             //    Input.Email,
             //    "Confirm your email",

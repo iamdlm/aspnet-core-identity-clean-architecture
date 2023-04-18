@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Text;
 using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
@@ -40,17 +41,17 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
             public string NewEmail { get; set; }
         }
 
-        private async Task LoadAsync(ApplicationUserDto user)
+        private async Task LoadAsync()
         {
-            var email = await _userService.GetEmailAsync(user);
-            Email = email;
+            var user = await _authService.GetCurrentUserAsync(User);
+            Email = user.Email;
 
             Input = new InputModel
             {
-                NewEmail = email,
+                NewEmail = user.Email,
             };
 
-            IsEmailConfirmed = await _userService.IsEmailConfirmedAsync(user);
+            IsEmailConfirmed = user.EmailConfirmed;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -61,7 +62,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user.");
             }
 
-            await LoadAsync(user);
+            await LoadAsync();
             return Page();
         }
 
@@ -75,21 +76,22 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
 
             if (!ModelState.IsValid)
             {
-                await LoadAsync(user);
+                await LoadAsync();
                 return Page();
             }
 
-            var email = await _userService.GetEmailAsync(user);
-            if (Input.NewEmail != email)
+            if (Input.NewEmail != user.Email)
             {
-                var userId = await _userService.GetUserIdAsync(user);
-                var code = await _authService.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
+                var code = await _authService.GenerateChangeEmailTokenAsync(User, Input.NewEmail);
+                
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
                     pageHandler: null,
-                    values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
+                    values: new { area = "Identity", email = Input.NewEmail, code },
                     protocol: Request.Scheme);
+
                 //await _emailSender.SendEmailAsync(
                 //    Input.NewEmail,
                 //    "Confirm your email",
@@ -105,27 +107,21 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
         {
-            var user = await _authService.GetCurrentUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user.");
-            }
-
             if (!ModelState.IsValid)
             {
-                await LoadAsync(user);
+                await LoadAsync();
                 return Page();
             }
-
-            var userId = await _userService.GetUserIdAsync(user);
-            var email = await _userService.GetEmailAsync(user);
-            var code = await _authService.GenerateEmailConfirmationTokenAsync(userId);
+            
+            var code = await _authService.GenerateEmailConfirmationTokenAsync(User);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { area = "Identity", userId = userId, code = code },
+                values: new { area = "Identity", code },
                 protocol: Request.Scheme);
+            
             //await _emailSender.SendEmailAsync(
             //    email,
             //    "Confirm your email",

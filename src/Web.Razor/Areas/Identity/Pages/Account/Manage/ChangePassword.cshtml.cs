@@ -48,13 +48,8 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await _authService.GetCurrentUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user.");
-            }
-
-            var hasPassword = await _userService.HasPasswordAsync(user);
+            var hasPassword = await _userService.HasPasswordAsync(User);
+            
             if (!hasPassword)
             {
                 return RedirectToPage("./SetPassword");
@@ -70,13 +65,8 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var user = await _authService.GetCurrentUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user.");
-            }
-
-            var changePasswordResult = await _userService.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
+            var changePasswordResult = await _userService.ChangePasswordAsync(User, Input.OldPassword, Input.NewPassword);
+            
             if (!changePasswordResult.Succeeded)
             {
                 foreach (var error in changePasswordResult.Errors)
@@ -86,7 +76,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            await _authService.RefreshSignInAsync(user);
+            await _authService.RefreshSignInAsync(User);
             _logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Your password has been changed.";
 

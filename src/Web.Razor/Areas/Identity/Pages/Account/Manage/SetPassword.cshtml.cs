@@ -39,13 +39,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await _authService.GetCurrentUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user.");
-            }
-
-            var hasPassword = await _userService.HasPasswordAsync(user);
+            var hasPassword = await _userService.HasPasswordAsync(User);
 
             if (hasPassword)
             {
@@ -62,13 +56,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var user = await _authService.GetCurrentUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user.");
-            }
-
-            var addPasswordResult = await _userService.AddPasswordAsync(user, Input.NewPassword);
+            var addPasswordResult = await _userService.AddPasswordAsync(User, Input.NewPassword);
             if (!addPasswordResult.Succeeded)
             {
                 foreach (var error in addPasswordResult.Errors)
@@ -78,7 +66,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            await _authService.RefreshSignInAsync(user);
+            await _authService.RefreshSignInAsync(User);
             StatusMessage = "Your password has been set.";
 
             return RedirectToPage();
