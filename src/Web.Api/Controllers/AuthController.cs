@@ -111,11 +111,9 @@ namespace Web.Api.Controllers
                     return BadRequest();
                 }
 
-                return Ok(new
-                {
-                    response.UserId,
-                    response.Token
-                });
+                // Send email with token code
+
+                return NoContent();
             }
             catch (Exception ex)
             {
