@@ -104,7 +104,7 @@ namespace Web.Api.Controllers
         {
             try
             {
-                EmailConfirmationResponse response = await _authService.GenerateEmailConfirmationAsync(User);
+                TokenResponse response = await _authService.GenerateEmailConfirmationAsync(User);
 
                 if (response == null || !response.Succeeded)
                 {

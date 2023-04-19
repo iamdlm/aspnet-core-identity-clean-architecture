@@ -56,9 +56,15 @@ namespace Infrastructure.Identity.Services
             return result.ToAuthenticationResult();
         }
 
-        public async Task<bool> IsEmailConfirmedAsync(ClaimsPrincipal principal)
+        public async Task<bool> IsEmailConfirmedAsync(string email)
         {
-            ApplicationUser user = await _userManager.GetUserAsync(principal);
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
+            
+            if (user == null)
+            {
+                return false;
+            }
+            
             return await _userManager.IsEmailConfirmedAsync(user);
         }
 

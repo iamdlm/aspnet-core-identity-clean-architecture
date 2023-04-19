@@ -2,7 +2,7 @@
 
 namespace Core.Application.DTOs
 {
-    public class EmailConfirmationResponse : AuthenticationResponse
+    public class TokenResponse : AuthenticationResponse
     {
         [JsonPropertyName("userId")]
         public string UserId { get; set; }

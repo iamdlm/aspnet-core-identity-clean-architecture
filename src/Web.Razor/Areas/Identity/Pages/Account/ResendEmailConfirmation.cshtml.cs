@@ -51,7 +51,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            EmailConfirmationResponse response = await _authService.GenerateEmailConfirmationAsync(User);
+            TokenResponse response = await _authService.GenerateEmailConfirmationAsync(User);
             
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",

@@ -49,7 +49,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account
             DisplayConfirmAccountLink = true;
             if (DisplayConfirmAccountLink)
             {
-                EmailConfirmationResponse confirmationDto = await _authService.GenerateEmailConfirmationAsync(User);
+                TokenResponse confirmationDto = await _authService.GenerateEmailConfirmationAsync(User);
                 
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",

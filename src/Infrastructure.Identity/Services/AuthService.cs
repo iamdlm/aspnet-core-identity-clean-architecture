@@ -107,25 +107,40 @@ namespace Infrastructure.Identity.Services
                 };
             }
             
-            IdentityResult result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Token)), request.NewPassword);
             
             return result.ToAuthenticationResult();
         }
 
-        public async Task<string> GeneratePasswordResetTokenAsync(ClaimsPrincipal principal)
+        public async Task<TokenResponse> GeneratePasswordResetTokenAsync(string email)
         {
-            ApplicationUser user = await _userManager.GetUserAsync(principal);
-            
-            return await _userManager.GeneratePasswordResetTokenAsync(user);
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return new TokenResponse()
+                {
+                    Succeeded = false,
+                    Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
+                };
+            }
+
+            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return new TokenResponse()
+            {
+                Succeeded = true,
+                Token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token))
+            };
         }
 
-        public async Task<EmailConfirmationResponse> GenerateEmailConfirmationAsync(ClaimsPrincipal principal)
+        public async Task<TokenResponse> GenerateEmailConfirmationAsync(ClaimsPrincipal principal)
         {
             ApplicationUser user = await _userManager.GetUserAsync(principal);
 
             if (user == null)
             {
-                return new EmailConfirmationResponse()
+                return new TokenResponse()
                 {
                     Succeeded = false,
                     Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
@@ -134,7 +149,7 @@ namespace Infrastructure.Identity.Services
 
             string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            return new EmailConfirmationResponse()
+            return new TokenResponse()
             {
                 Succeeded = true,
                 UserId = user.Id,
@@ -172,13 +187,13 @@ namespace Infrastructure.Identity.Services
             }
         }
 
-        public async Task<EmailConfirmationResponse> GenerateEmailChangeAsync(ClaimsPrincipal principal, string newEmail)
+        public async Task<TokenResponse> GenerateEmailChangeAsync(ClaimsPrincipal principal, string newEmail)
         {
             ApplicationUser user = await _userManager.GetUserAsync(principal);
 
             if (user == null)
             {
-                return new EmailConfirmationResponse()
+                return new TokenResponse()
                 {
                     Succeeded = false,
                     Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
@@ -187,7 +202,7 @@ namespace Infrastructure.Identity.Services
 
             string token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
             
-            return new EmailConfirmationResponse()
+            return new TokenResponse()
             {
                 Succeeded = true,
                 Token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token)),

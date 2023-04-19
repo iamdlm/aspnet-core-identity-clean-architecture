@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text;
+using Core.Application.DTOs;
 using Core.Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Web.Razor.Areas.Identity.Pages.Account
 {
@@ -36,7 +35,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account
         {
             if (ModelState.IsValid)
             {
-                if (!await _userService.IsEmailConfirmedAsync(User))
+                if (!await _userService.IsEmailConfirmedAsync(Input.Email))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToPage("./ForgotPasswordConfirmation");
@@ -44,13 +43,12 @@ namespace Web.Razor.Areas.Identity.Pages.Account
 
                 // For more information on how to enable account confirmation and password reset please
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await _authService.GeneratePasswordResetTokenAsync(User);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                TokenResponse response = await _authService.GeneratePasswordResetTokenAsync(Input.Email);
                 
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
-                    values: new { area = "Identity", code },
+                    values: new { area = "Identity", code = response.Token },
                     protocol: Request.Scheme);
 
                 //await _emailSender.SendEmailAsync(

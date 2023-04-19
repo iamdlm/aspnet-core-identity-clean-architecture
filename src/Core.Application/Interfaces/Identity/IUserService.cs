@@ -13,7 +13,7 @@ namespace Core.Application.Interfaces.Identity
         Task<string> GetPhoneNumberAsync(ClaimsPrincipal principal);
         Task<AuthenticationResponse> ChangeEmailAsync(ClaimsPrincipal principal, string email, string code);
         Task<AuthenticationResponse> ChangePasswordAsync(ClaimsPrincipal principal, string oldPassword, string newPassword);
-        Task<bool> IsEmailConfirmedAsync(ClaimsPrincipal principal);
+        Task<bool> IsEmailConfirmedAsync(string email);
         Task<bool> HasPasswordAsync(ClaimsPrincipal principal);
         Task<AuthenticationResponse> SetPhoneNumberAsync(ClaimsPrincipal principal, string phoneNumber);
         Task<AuthenticationResponse> AddPasswordAsync(ClaimsPrincipal principal, string newPassword);

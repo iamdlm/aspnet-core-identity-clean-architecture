@@ -10,10 +10,10 @@ namespace Core.Application.Interfaces.Identity
         Task<AuthenticationResponse> SignUpAsync(SignUpRequest signUpRequest);
         Task<AuthenticationResponse> ChangePasswordAsync(ClaimsPrincipal user, string currentPassword, string newPassword);
         Task<AuthenticationResponse> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest);
-        Task<string> GeneratePasswordResetTokenAsync(ClaimsPrincipal user);
+        Task<TokenResponse> GeneratePasswordResetTokenAsync(string email);
         Task<ApplicationUserDto> GetCurrentUserAsync(ClaimsPrincipal user);
-        Task<EmailConfirmationResponse> GenerateEmailConfirmationAsync(ClaimsPrincipal user);
-        Task<EmailConfirmationResponse> GenerateEmailChangeAsync(ClaimsPrincipal user, string newEmail);
+        Task<TokenResponse> GenerateEmailConfirmationAsync(ClaimsPrincipal user);
+        Task<TokenResponse> GenerateEmailChangeAsync(ClaimsPrincipal user, string newEmail);
         Task<AuthenticationResponse> ConfirmEmailAsync(EmailConfirmationRequest emailConfirmationRequest);
         Task RefreshSignInAsync(ClaimsPrincipal user);        
     }

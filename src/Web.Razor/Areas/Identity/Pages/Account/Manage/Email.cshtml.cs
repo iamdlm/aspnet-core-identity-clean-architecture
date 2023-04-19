@@ -82,7 +82,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
 
             if (Input.NewEmail != user.Email)
             {
-                EmailConfirmationResponse response = await _authService.GenerateEmailChangeAsync(User, Input.NewEmail);
+                TokenResponse response = await _authService.GenerateEmailChangeAsync(User, Input.NewEmail);
                 
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
@@ -111,7 +111,7 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
             
-            EmailConfirmationResponse confirmationResponse = await _authService.GenerateEmailConfirmationAsync(User);
+            TokenResponse confirmationResponse = await _authService.GenerateEmailConfirmationAsync(User);
             
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
