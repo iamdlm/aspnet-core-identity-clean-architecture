@@ -26,6 +26,7 @@ namespace Infrastructure.Identity.Services
         public async Task<bool> SignInAsync(SignInRequest request)
         {
             SignInResult signInResult = await _signInManager.PasswordSignInAsync(request.Email, request.Password, request.RememberMe, false);
+            
             return signInResult.Succeeded;
         }
 
@@ -41,7 +42,7 @@ namespace Infrastructure.Identity.Services
                 return null;
             }
 
-            var userId = _userManager.GetUserId(principal);
+            string userId = _userManager.GetUserId(principal);
             if (string.IsNullOrEmpty(userId))
             {
                 return null;
@@ -59,13 +60,13 @@ namespace Infrastructure.Identity.Services
 
         public async Task<AuthenticationResponse> SignUpAsync(SignUpRequest request)
         {
-            var user = new ApplicationUser
+            ApplicationUser user = new ApplicationUser
             {
                 Email = request.Email,
                 UserName = request.Email
             };
 
-            var result = await _userManager.CreateAsync(user, request.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, request.Password);
 
             if (result.Succeeded)
             {
@@ -78,7 +79,18 @@ namespace Infrastructure.Identity.Services
         public async Task<AuthenticationResponse> ChangePasswordAsync(ClaimsPrincipal principal, string currentPassword, string newPassword)
         {
             ApplicationUser user = await _userManager.GetUserAsync(principal);
-            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            
+            if (user == null)
+            {
+                return new AuthenticationResponse()
+                {
+                    Succeeded = false,
+                    Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
+                };
+            }
+
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            
             return result.ToAuthenticationResult();
         }
 
@@ -86,22 +98,24 @@ namespace Infrastructure.Identity.Services
         {
             ApplicationUser user = await _userManager.FindByEmailAsync(request.UserEmail);
 
-            if (user != null)
+            if (user == null)
             {
-                var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
-                return result.ToAuthenticationResult();
+                return new AuthenticationResponse()
+                {
+                    Succeeded = false,
+                    Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
+                };
             }
-
-            return new AuthenticationResponse()
-            {
-                Succeeded = false,
-                Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
-            };
+            
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+            
+            return result.ToAuthenticationResult();
         }
 
         public async Task<string> GeneratePasswordResetTokenAsync(ClaimsPrincipal principal)
         {
             ApplicationUser user = await _userManager.GetUserAsync(principal);
+            
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
@@ -132,18 +146,20 @@ namespace Infrastructure.Identity.Services
         {
             ApplicationUser user = await _userManager.FindByIdAsync(request.UserId);
 
-            if (user != null)
+            if (user == null)
             {
-                string token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Token));
-                IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
-                return result.ToAuthenticationResult();
+                return new AuthenticationResponse()
+                {
+                    Succeeded = false,
+                    Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
+                };
             }
-
-            return new AuthenticationResponse()
-            {
-                Succeeded = false,
-                Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
-            };
+            
+            string token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Token));
+            
+            IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
+            
+            return result.ToAuthenticationResult();
         }
 
         public async Task RefreshSignInAsync(ClaimsPrincipal principal)
@@ -156,11 +172,27 @@ namespace Infrastructure.Identity.Services
             }
         }
 
-        public async Task<string> GenerateChangeEmailTokenAsync(ClaimsPrincipal principal, string newEmail)
+        public async Task<EmailConfirmationResponse> GenerateEmailChangeAsync(ClaimsPrincipal principal, string newEmail)
         {
             ApplicationUser user = await _userManager.GetUserAsync(principal);
 
-            return await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+            if (user == null)
+            {
+                return new EmailConfirmationResponse()
+                {
+                    Succeeded = false,
+                    Errors = new Dictionary<string, string>() { { string.Empty, "Invalid request." } }
+                };
+            }
+
+            string token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+            
+            return new EmailConfirmationResponse()
+            {
+                Succeeded = true,
+                Token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token)),
+                UserId = user.Id
+            };
         }
     }
 }

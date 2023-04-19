@@ -82,14 +82,12 @@ namespace Web.Razor.Areas.Identity.Pages.Account.Manage
 
             if (Input.NewEmail != user.Email)
             {
-                var code = await _authService.GenerateChangeEmailTokenAsync(User, Input.NewEmail);
-                
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                EmailConfirmationResponse response = await _authService.GenerateEmailChangeAsync(User, Input.NewEmail);
                 
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
                     pageHandler: null,
-                    values: new { area = "Identity", email = Input.NewEmail, code },
+                    values: new { area = "Identity", email = Input.NewEmail, response.Token },
                     protocol: Request.Scheme);
 
                 //await _emailSender.SendEmailAsync(
