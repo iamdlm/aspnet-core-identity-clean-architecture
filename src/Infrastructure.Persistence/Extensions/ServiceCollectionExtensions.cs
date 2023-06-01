@@ -19,7 +19,7 @@ namespace Infrastructure.Persistence.Extensions
 
         public static void AddInfrastructurePersistenceServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }

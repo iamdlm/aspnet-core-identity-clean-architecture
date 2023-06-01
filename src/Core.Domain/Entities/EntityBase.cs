@@ -2,7 +2,7 @@
 
 namespace Core.Domain.Entities
 {
-    public abstract class BaseEntity
+    public abstract class EntityBase
     {
         [Key]
         public Guid Id { get; set; }

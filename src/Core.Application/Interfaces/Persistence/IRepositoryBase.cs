@@ -2,7 +2,7 @@
 
 namespace Core.Application.Interfaces.Persistence
 {
-    public interface IBaseRepository<T>
+    public interface IRepositoryBase<T>
     {
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, params Expression<Func<T, object>>[] includes);
 
