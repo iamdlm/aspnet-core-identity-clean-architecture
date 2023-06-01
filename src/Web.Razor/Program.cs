@@ -1,6 +1,8 @@
 using Core.Application.Extensions;
 using Infrastructure.Persistence.Extensions;
 using Infrastructure.Identity.Extensions;
+using Web.Razor.Extensions;
+using Infrastructure.Shared.Extensions;
 
 namespace Web.Razor
 {
@@ -25,6 +27,10 @@ namespace Web.Razor
             builder.Services.AddInfrastructureIdentityServices();
 
             builder.Services.AddInfrastructurePersistenceServices();
+
+            builder.Services.AddInfrastructureSharedServices();
+
+            builder.Services.AddWebRazorServices();
 
             // Add mapping profiles
 
