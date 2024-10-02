@@ -5,6 +5,7 @@ This solution provides a starting point to build any type of client (Razor pages
 
 Clean Architecture is promoted by Microsoft on their .NET application architecture guide page. The e-book written by Steve "ardalis" Smith ([@ardalis](https://github.com/ardalis)) is very well written and explains in detail the benefits of using Clean Architecture. For more details, please see [Architect Modern Web Applications with ASP.NET Core and Azure](https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/).
 
+<b>For a live application forked from this repository see [Budgetbase repository](https://github.com/iamdlm/budgetbase) or visit the [website](https://budgetbase.app/).</b>
 ## Configuring the sample to use PostgreSQL
 1. Ensure your connection string in appsettings.json point to a local PostgreSQL instance.
 2. Ensure the tool EF was already installed. You can find some help [here](https://docs.microsoft.com/ef/core/miscellaneous/cli/dotnet).
